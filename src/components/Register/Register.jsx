@@ -3,7 +3,6 @@ import {supabase} from '../../supabase';
 import { Link} from 'react-router-dom';
 import './Register.scss';
 
-
 const Register = () => {
   
   const [formData, setFromData] = useState({
@@ -11,6 +10,7 @@ const Register = () => {
     username: '', email:'', password: ''
   
   })
+  console.log(formData);
   
   function handleChange(event) {
     
@@ -29,32 +29,44 @@ const Register = () => {
   }
 
  async function handleSubmit(e){
-  e.preventDefault()
-    
-  try {
-      
-      const {data, error} = await supabase.auth.signUp({
-        
+  e.preventDefault();
+
+    try {
+      const { authData, error } = await supabase.auth.signUp({
         email: formData.email,
-        
         password: formData.password,
-        
         options: {
           name: formData.name
         }
-      
-      })
+      });
 
-      
-      
-      console.log(data)
-      
-      alert('Registration successful. Please check your email for verification link.');
+      console.log(authData);
 
-    } catch(error) {
+      const user = {
+        name: formData.username,
+        email: formData.email,
+        password: formData.password
+      };
 
-      alert(error)
-    
+      const response = await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      });
+
+      if (response.ok) {
+        console.log('User inserted into the database');
+        alert('Registration successful. Please check your email for verification link.');
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to insert the user into the database:', errorData);
+        alert('Failed to insert the user into the database');
+      }
+    } catch (error) {
+      console.error('Error during user registration:', error);
+      alert('Error during user registration');
     }
  }
 
