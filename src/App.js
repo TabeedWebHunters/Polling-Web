@@ -3,6 +3,9 @@ import { BrowserRouter, Routes,Route } from "react-router-dom";
 import Home from './components/Home/Home';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
+import Poll from './components/Polls/Poll';
+import Vote from './components/Vote/Vote'
+import Winner from './components/Winner/Winner';
 
 const App = () => {
 
@@ -33,7 +36,17 @@ const App = () => {
         
         <Route path='/' element={<Login setToken={setToken}/> } />
         
-        {token?<Route path={'/home'} element={ <Home/>} />:""}
+        {token ? (
+              <>
+                <Route path="/home" element={<Home />} />
+                <Route path="/poll" element={<Poll />} />
+                <Route path="/vote/:pollId" element={<Vote />} />
+                <Route path="/poll/:pollId/winner" element={<Winner />} />
+
+              </>
+            ) : (
+              ''
+        )}
       
       </Routes>
     
