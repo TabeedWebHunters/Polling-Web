@@ -48,7 +48,6 @@ const Vote = () => {
         if (response.ok) {
           console.log('Vote submitted successfully');
           toast.success('Vote submitted successfully!');
-          // Stay on the current page
         } else {
           console.error('Failed to submit vote');
         }
@@ -62,7 +61,7 @@ const Vote = () => {
     return <div>Loading...</div>;
   }
 
-  // Calculate percentage for each option
+
   const calculatePercentage = (votes, totalVotes) => {
     if (totalVotes === 0) return 0;
     return ((votes / totalVotes) * 100).toFixed(2);
