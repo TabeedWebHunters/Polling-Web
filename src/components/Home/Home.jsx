@@ -1,28 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Home.scss';
 import { useNavigate } from 'react-router-dom';
+import { usePolls } from './homeHooks';
 
 const Home = () => {
-  const [polls, setPolls] = useState([]);
+  const polls = usePolls();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchPolls();
-  }, []);
-
-  async function fetchPolls() {
-    try {
-      const response = await fetch('http://localhost:3000/poll/');
-      if (response.ok) {
-        const data = await response.json();
-        setPolls(data);
-      } else {
-        console.error('Failed to fetch polls:', response.status);
-      }
-    } catch (error) {
-      console.error('Error during poll fetching:', error);
-    }
-  }
 
   function handleLogout() {
     sessionStorage.removeItem('token');

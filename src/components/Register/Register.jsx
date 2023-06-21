@@ -1,43 +1,26 @@
-import React, { useState } from 'react';
-import {supabase} from '../../supabase';
-import { Link} from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { supabase } from '../../supabase';
+import { useRegisterForm } from './registerHooks';
 import './Register.scss';
 
 const Register = () => {
-  
-  const [formData, setFromData] = useState({
-  
-    username: '', email:'', password: ''
-  
-  })
-  console.log(formData);
-  
-  function handleChange(event) {
-    
-    setFromData((prevFormData)=>{
-      
-      return {
-      
-        ...prevFormData,
-        
-        [event.target.name]:event.target.value
-      
-      }
-    
-    })
+  const { formData, handleChange } = useRegisterForm({
+    username: '',
+    email: '',
+    password: '',
+  });
 
-  }
-
- async function handleSubmit(e){
-  e.preventDefault();
+  async function handleSubmit(e) {
+    e.preventDefault();
 
     try {
       const { authData, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
-          name: formData.name
-        }
+          name: formData.name,
+        },
       });
 
       console.log(authData);
@@ -45,15 +28,15 @@ const Register = () => {
       const user = {
         name: formData.username,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
       };
 
       const response = await fetch('http://localhost:3000/users', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
       });
 
       if (response.ok) {
@@ -68,28 +51,41 @@ const Register = () => {
       console.error('Error during user registration:', error);
       alert('Error during user registration');
     }
- }
-
+  }
 
   return (
     <div className="register-container">
-      
       <h2>Register</h2>
-      
       <form className="register-form" onSubmit={handleSubmit}>
-        
-        <input  className="register-input" placeholder="Username" name='username' onChange={handleChange} />
-        
-        <input className='register-input' placeholder='email'  name='email' onChange={handleChange}/>
-        
-        <input type="password" className="register-input" placeholder="Password"  name='password' onChange={handleChange} />
-        
-        <button type="submit" className="register-button">Register</button>
-      
+        <input
+          className="register-input"
+          placeholder="Username"
+          name="username"
+          onChange={handleChange}
+          value={formData.username}
+        />
+        <input
+          className="register-input"
+          placeholder="Email"
+          name="email"
+          onChange={handleChange}
+          value={formData.email}
+        />
+        <input
+          type="password"
+          className="register-input"
+          placeholder="Password"
+          name="password"
+          onChange={handleChange}
+          value={formData.password}
+        />
+        <button type="submit" className="register-button">
+          Register
+        </button>
       </form>
-
-      <p>Already have an account? <Link to="/">Login</Link></p>
-
+      <p>
+        Already have an account? <Link to="/">Login</Link>
+      </p>
     </div>
   );
 };
